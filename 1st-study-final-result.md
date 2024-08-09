@@ -1,20 +1,15 @@
----
-
-## 스터디 최종 내용 정리
+# 스터디 최종 내용 정리
 
 - 유호성 - DP(동적 프로그래밍 - Dynamic Programming)
     
-    # 동적 계획법(Dynamic Programming)
+    ## 동적 계획법(Dynamic Programming)
     
     **다이나믹 프로그래밍(또는 동적 계획법)은 복잡한 문제를 더 작은 하위 문제로 나누어 해결하는 알고리즘 설계 기법**
     
     - 알고리즘 설계 기법: 문제 해결을 위해 알고리즘을 설계하는 방법이나 접근 방식을 나타냄. 설계 기법은 알고리즘을 개발하고 구현하는 데 사용되는 전략이나 원칙들을 포함
         
         ex) **분할 정복, 동적 계획법, 탐욕적 알고리즘, 백트래킹 등**
-        
-    
-    ---
-    
+
     ### DP과 재귀적 호출의 차이점
     
     1. **하향식(Top-down) vs 상향식(Bottom-up) 접근**
@@ -53,8 +48,7 @@
         - Memoization은 캐싱을 통해 이전 계산 결과를 저장하여 중복 계산을 피하는 것을 의미
         
         ⇒ Memoization은 재귀를 사용하므로 구현이 더 간단하고 필요한 부분 문제만 해결하므로 계산 시간을 절약 가능, 하지만 재귀 호출의 오버헤드가 발생할 수 있으며, 모든 작은 부분 문제를 해결하지 않을 경우 최적 부분 구조를 보장하지 않을 수 있음
-        
-    
+
     ## **DP 장단점**
     
     장점
@@ -142,7 +136,162 @@
     ```
     
 - 이찬진 - 다익스트라알고리즘
-    
+
+    # 다익스트라 알고리즘
+
+## 다익스트라 알고리즘
+
+- 각 모든 노드까지의 최단거리를 구하는 알고리즘
+- 다익스트라 알고리즘은 기본적으로 그리디 알고리즘과 다이나믹 프로그래밍을 사용한 알고리즘
+
+## 다익스트라 알고리즘 예제
+
+아래의 가중치 방향그래프에서 1번 정점에서 모든 정점으로의 최소 거리비용을 출력하는 프로
+그램을 작성하세요. (경로가 없으면 Impossible를 출력한다)
+
+![image](https://github.com/user-attachments/assets/9e3f71ec-529f-4b2f-a516-ea440386a49c)
+
+- 입력설명
+
+첫째 줄에는 정점의 수 N(1<=N<=20)와 간선의 수 M가 주어진다. 그 다음부터 M줄에 걸쳐 연
+결정보와 거리비용이 주어진다.
+
+- 출력설명
+
+1번 정점에서 각 정점으로 가는 최소비용을 2번 정점부터 차례대로 출력하세요.
+
+- 입력 예제
+
+```
+6 9
+1 2 12 
+1 3 4
+2 1 2
+2 3 5
+2 5 5
+3 4 5
+4 2 2
+4 5 5
+6 4 5
+```
+
+ex) 1 2 12 : 1번 정점에서 2번정점으로 가는데 12의 비용이 든다.
+
+- 출력 예제
+
+```
+2 : 11
+3 : 4
+4 : 9
+5 : 14
+6 : impossible
+```
+
+### 다익스트라 알고리즘 원리
+
+- 다익스트라 알고리즘은 두가지 기반으로 반복된다.
+    1. 방문하지 않은 노드 중에서 가장 비용이 적은 노드를 선택한다.(그리디 알고리즘)
+    2. 해당 노드로부터 갈 수 있는 노드들의 비용을 갱신한다.(다이나믹 프로그래밍)
+- 다익스트라 알고리즘을 예제에 적용시켜보자
+1. 출발지점에서의 가중치를 0으로 설정하고 값을 갱신한다(확정짓는다).
+2. 연결된 노드들을 하나씩 방문한다.
+3. 기존 가중치 값과 연결된 노드의 가중치의 합을 더해 연결된 노드의 가중치값을 저장한다.
+    1. ex) 1노드→2노드로 가는 가중치가 12 이고 1노드의 가중치가 0이면 0+12=12이므로 2노드의 가중치는 12가 된다.
+4. 확정된 노드의 가중치값을 제외한 모든 값중에 가장 작은 값을 선택한다.
+    1. ex) 2노드의 가중치가 12, 3노드의 가중치가 4라고 하면 1노드의 가중치는 확정이 되었기때문에 그 중 가장 작은 가중치값인 3노드가 결정된다.
+5. 선택한 값을 갱신(확정)한후 2번~4번의 내용을 계속반복한다.
+
+### 다익스트라 알고리즘 복잡도
+
+- 위와 같이 다익스트라 알고리즘을 적용한다면 최악의 경우 1번 노드에서 n번 노드까지 n번을 탐색할수 있기때문에 O(N^2)이 된다.
+- PriorityQueue(우선순위 큐)를 사용하면 최소비용을 탐색할때 O(logN)의 시간복잡도를 가지기 때문에 O(N*logN)이 된다.
+
+### PriorityQueue를 이용한 예제코드
+
+```java
+import java.util.*;
+public class Sol0905DijkstraAlgorithm {
+    static ArrayList<ArrayList<Point>> list;
+    static int[] arr;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        list = new ArrayList<>();
+        arr = new int[n + 1];
+        Arrays.fill(arr, Integer.MAX_VALUE);
+        for (int i = 0; i <= n; ++i) {
+            list.add(new ArrayList<>());
+        }
+        for (int i = 0; i < m; ++i) {
+            int currentNode = sc.nextInt();
+            int nextNode = sc.nextInt();
+            int weight = sc.nextInt();
+            list.get(currentNode).add(new Point(nextNode, weight));
+        }
+        solution(1);
+        for (int i = 2; i <= n; ++i) {
+            if (arr[i] == Integer.MAX_VALUE) {
+                System.out.println(i + " : impossible");
+            }else{
+                System.out.println(i + " : " + arr[i]);
+            }
+        }
+    }
+
+    public static void solution(int nextNode) {
+        PriorityQueue<Point> pQ = new PriorityQueue<>();
+        pQ.offer(new Point(nextNode, 0));
+        while (!pQ.isEmpty()) {
+            Point tmp = pQ.poll();
+            int currentNode = tmp.nextNode;
+            int currentWeight = tmp.weight;
+            if(arr[currentNode]<currentWeight) continue;
+            for (Point p : list.get(currentNode)) {
+                if (arr[p.nextNode] > currentWeight + p.weight) {
+                    arr[p.nextNode] = currentWeight + p.weight;
+                    pQ.offer(new Point(p.nextNode, currentWeight + p.weight));
+                }
+            }
+        }
+    }
+    public static class Point implements Comparable<Point>{
+        int nextNode;
+        int weight;
+
+        public Point(int nextNode, int weight) {
+            this.nextNode = nextNode;
+            this.weight = weight;
+        }
+        @Override
+        public int compareTo(Point o){
+            return weight - o.weight;
+        }
+    }
+}
+
+```
+
+- `list` : 그래프의 입력정보를 받는 리스트
+- `arr` : 노드의 가중치 값을 저장하는 배열
+- `ArrayList<ArrayList<Point>>`  :  인접리스트 방식을 사용하여 ArrayList안에 ArrayList를 선언하고 동적 2차원배열을 만든다.
+- `Arrays.fill(arr, Integer.MAX_VALUE);` : 가중치가 작은 값을 반환해야하기 때문에 가장 큰 값들을 선언한다.
+- `Point implements Comparable<Point>` : `PriorityQueue`는 정렬기준에 따라서 정렬해주기 때문에 자바에서 지원해주는 Comparable 인터페이스를 사용하여 정렬기준을 결정한다. 위 예제에서는 가중치가 작은 값을 꺼내야 하므로 가중치를 기준으로 오름차순 정렬을 선언한다.
+- `if(arr[currentNode]<currentWeight) continue;`
+    - 시간복잡도를 줄일수있는 수단(O(N^2)→O(N*logN)
+    - arr[현재노드] 값보다 큐에서 꺼낸 가중치 값보다 작으면 for문을 돌필요없기 때문에 `continue` 를 통해 탈출한다(어려움!!, 중요!!)
+    - arr의 모든 값을 가장 큰 값으로 초기화한 이유이기도 하다.
+- arr의 값보다 가중치 값이 더 작으면 갱신 후, pq에 저장
+
+```java
+for (Point p : list.get(currentNode)) {
+                if (arr[p.nextNode] > currentWeight + p.weight) {
+                    arr[p.nextNode] = currentWeight + p.weight;
+                    pQ.offer(new Point(p.nextNode, currentWeight + p.weight));
+                }
+            }
+```
+
     [다익스트라 알고리즘](https://www.notion.so/86bb756601174d2d862d9fa6b5d15556?pvs=21) 
     
     [우선순위 큐](https://swexpertacademy.com/main/visualcode/main.do#/home/editor//)
@@ -157,13 +306,13 @@
     - 레퍼런스 코드 출처
         
         https://swexpertacademy.com/main/learn/referenceCode/referenceCodeDetail.do?referenceId=GRAPH&category=DataStructure
-        
     
     그래프 및 트리 탐색에 활용, 맹목적 탐색 방법
     
     - 그래프(자료구조) 레퍼런스 코드
-        
-        ```java
+
+        ```
+        java
         import java.util.Scanner;
          
          
@@ -280,7 +429,8 @@
         
     - 트리(자료구조) 레퍼런스 코드
         
-        ```java
+        ```
+      java
         import java.util.Scanner;
          
         class Tree {
@@ -386,21 +536,21 @@
             }
         }
         ```
-        
-    
+
     DFS (**Depth-First Search)** : **스택 or 재귀** - 현재 정점에서 갈 수 있는 점들까지 들어가면서 탐색
     
     - 키워드 ⇒ 모든 경로(노드) 탐색 ㅡ 끝나는 조건 ⇒ 재귀 끝내기 위해서
     - **구현이 쉬운 편**
         
-        ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d85fd78d-de88-4966-9b27-62e3e2e8c2a0/f383e231-6f04-4b87-80c5-ee60104e2a9c/Untitled.png)
-        
-    
+       ![image](https://github.com/user-attachments/assets/79be34d5-93d2-4fa2-89f3-9fff03188f24)
+
+
     **그래프 및 트리 탐색의 경우 방문 여부를 검색하여야 그래프의 순회가 생기지 않음**
     
     - 레퍼런스 코드
         
-        ```java
+        ```
+      java
         import java.util.Scanner;
         
         // 그래프 DFS 탐색 
@@ -475,18 +625,18 @@
             }
         }
         ```
-        
-    
+
     BFS (**Breadth-First Search) : 큐 -** FIFO방식 탐색 현재 정점에 연결된 가까운 점들부터 탐색
     
     - 키워드 ⇒ 최단 경로, 임의의 경로
     - DFS대비 빠름
         
-        ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d85fd78d-de88-4966-9b27-62e3e2e8c2a0/fb279488-9223-4ce6-9784-396dbaeeeedf/Untitled.png)
+        ![image](https://github.com/user-attachments/assets/24432df1-23ef-4d15-b9ba-30577b0e9e7d)
+
         
     - 레퍼런스 코드
-        
-        ```java
+        ```
+      java
         import java.util.Scanner;
          
         class Queue
@@ -606,16 +756,76 @@
         
 - 한선규 - 정렬
     
-    [정렬](https://www.notion.so/4bbfd1c1b24d48d7b5c3bbe0266b15fc?pvs=21)
+    ## 정렬이란?
+
+- 가지런하게 줄지어 늘어섬. 또는 그렇게 늘어서게 함
+- 데이터를 특정한 조건에 따라 일정한 순서가 되도록 다시 배열하는 일.
+
+## 정렬의 방법
+
+- 내부정렬
+- 외부정렬
+
+정렬할 데이터가 하나의 배열에 저장될 수 있으면 내부정렬을,
+
+정렬할 데이터가 하나의 배열에 저장될 수 없으면 외부정렬을 주로 사용한다.
+
+## 정렬 알고리즘의 핵심 요소
+
+- 비교
+- 교환(이동)
+- 반복(재귀)
+
+## 정렬의 종류
+
+[선택 정렬](https://www.notion.so/6ded5b1e451745b8924b57e648b68a05?pvs=21)
+
+[버블 정렬](https://www.notion.so/bb5e702abc874387ab21fe8e61c25715?pvs=21)
+
+[삽입 정렬](https://www.notion.so/d4b5b3f5f3d9426fac79b41778231545?pvs=21)
+
+[병합 정렬](https://www.notion.so/93586fa504bd443abbef153e85b6ade0?pvs=21)
+
+[퀵 정렬](https://www.notion.so/10ba652c9d9f487b9f68b1a71d3b4524?pvs=21)
+
+[힙 정렬](https://www.notion.so/e53405dea4f448049c509c4d2e41e003?pvs=21)
+
+## 선택 정렬
+
+- 작은 요소의 순서대로 선택해 앞쪽으로 위치를 옮겨 순서대로 정렬하는 알고리즘
+
+## 버블 정렬
+
+- 맨 끝단부터 이웃한 두 요소의 비교-교환의 과정을 진행하며 정렬하는 알고리즘
+
+## 삽입 정렬
+
+- 선택한 요소를 앞쪽의 알맞은 위치로 삽입해 정렬하는 알고리즘
+
+## 병합 정렬
+
+- 정렬을 앞부분과 뒷부분으로 나눈 후 정렬하고, 병합하는 과정을 반복하는 알고리즘
+
+## 퀵 정렬
+
+- 임의의 한 요소를 선택하고 그 요소를 기준으로 그룹을 나눠 정렬하는 작업을 반복.
+그룹원이 모두 1명이 될 경우 정렬이 끝나는 알고리즘
+- 정렬 알고리즘 중 가장 빠른 알고리즘으로 일반적으로 사용됨.
+
+## 힙 정렬
+
+- 힙(heap)을 사용해 정렬하는 선택 정렬 응용 알고리즘.
+
+※힙이란? 완전이진트리
     
 
-### 이번 주 기여자
+# 이번 주 기여자
 
 ---
 
 참석 :  고준수 유호성 한선규 이찬진
 
-### 이번 주의 목표
+# 이번 주의 목표
 
 ---
 
@@ -638,29 +848,28 @@
 ---
 
 - 한선규
-    - 강의
-        - 동근 튜터>보충학습
+    - 강의 보충
+        - 동근 튜터 > 보충학습
     - 1차 스터디
         - 알고리즘 스터디 지속성?
-            - 시간만큼은 분배 하는 느낌
-    - 고민. 제출 후 >
+    - 고민사항, 문제 제출 후 
         - 이게 왜 정답? ⇒ 코드리뷰가 필요.
 
 - 고준수
     - 2차 스터디 고민
-        - 프론트 스터디? ⇒ javascript , html , css ;; spring ;; network ㅡㅡㅡ react vue/ 서버
-        - 2차~3차 SQLD 6시간 + SQL고득점kit >>
+        - 프론트 스터디? ⇒ javascript , html , css , spring , network, react, vue 등등
+        - 2차~3차 SQLD 6시간 + SQL고득점kit 
         - 4~5차 쿠버네티스 && 도커
-        - 4차~5차 AWS  25시간 >>
+        - 4차~5차 AWS  25시간 
         - 모의고사 구해서 주말에 모여서 풀이
 
 - 유호성 후기
-    
-    이번 1차 스터디를 진행하면서 알고리즘을 시작한지 얼마 되지 않아 따라 갈 수 있을까 걱정이 많았지만 알고리즘의 기본기를 탄탄하게 다질 수 있는 시간이었던것 같습니다.
-    
-     Queue, Stack을 시작으로 DFS, BFS, DP, 투 포인터 기법 등 다양한 알고리즘 기법들을 처음 접하고 공부하며 문제를 해결하는데 있어 개발자로써 더욱 더 성장할 수 있는 경험이었으며, 스터디원들과 문제를 두고 브레인스토밍을 해가며 문제를 해결하고 서로를 도와주는 것에 있어 스터디의 장점을 느낄 수 있었으며, 알고리즘 문제나 기법 뿐만 아니라 다른 문제들에 대해서도 서로 다른 관점에서 이야기하며 제 생각의 폭을 넓힐 수 있었던 시간들이 인상적으로 남았습니다.
-    
-    개인적으로 가장 만족스러웠던 점은 제 자신만의 루틴 혹은 좋은 습관을 만들었다는 것입니다. 스터디 규칙으로 시작한 하루에 하나의 알고리즘 문제를 풀고 1일 1commit을 스터디가 아니더라도 계속해서 하게되고, 그날의 공부했던 것들의 복습하는 등 계속해서 꾸준히 이어나갈 수 있도록 노력할 것입니다. 또한 부족한 시간 속에서 시간 관리를 좀더 효율적으로 활용하는 방법에 대해 많은 생각을 하고 계획을 세우며, 제 자신이 한층 더 성장한 사람이 되었다라는 것을 느낄 수 있었던 1차 스터디 였던거 같습니다.
-    
+
+  이번 1차 스터디를 진행하면서 알고리즘을 시작한지 얼마 되지 않아 따라 갈 수 있을까 걱정이 많았지만 알고리즘의 기본기를 탄탄하게 다질 수 있는 시간이었던것 같습니다.
+
+  Queue, Stack을 시작으로 DFS, BFS, DP, 투 포인터 기법 등 다양한 알고리즘 기법들을 처음 접하고 공부하며 문제를 해결하는데 있어 개발자로써 더욱 더 성장할 수 있는 경험이었으며, 스터디원들과 문제를 두고 브레인스토밍을 해가며 문제를 해결하고 서로를 도와주는 것에 있어 스터디의 장점을 느낄 수 있었으며, 알고리즘 문제나 기법 뿐만 아니라 다른 문제들에 대해서도 서로 다른 관점에서 이야기하며 제 생각의 폭을 넓힐 수 있었던 시간들이 인상적으로 남았습니다.
+
+  개인적으로 가장 만족스러웠던 점은 제 자신만의 루틴 혹은 좋은 습관을 만들었다는 것입니다. 스터디 규칙으로 시작한 하루에 하나의 알고리즘 문제를 풀고 1일 1commit을 스터디가 아니더라도 계속해서 하게되고, 그날의 공부했던 것들의 복습하는 등 계속해서 꾸준히 이어나갈 수 있도록 노력할 것입니다. 또한 부족한 시간 속에서 시간 관리를 좀더 효율적으로 활용하는 방법에 대해 많은 생각을 하고 계획을 세우며, 제 자신이 한층 더 성장한 사람이 되었다라는 것을 느낄 수 있었던 1차 스터디 였던거 같습니다.
+
 - 이찬진
     - 원하는 스터디의 방향 > 같은 문제에 대해서 고민해보는걸 생각했었음
